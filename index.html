@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nature na Modernidade IA Sustentável</title>
+<style>
+  :root{
+    --ink:#07120d; --bg:#0a1d14; --bg2:#10251b; --mist:#d8efe0;
+    --leaf:#6fe3a4; --leaf-2:#22c55e; --sand:#f2d69b; --glow:#9ff0bd;
+    --line:rgba(217,255,232,.14); --max:1180px;
+    --font-display:Georgia, 'Times New Roman', serif;
+    --font-body:'Segoe UI', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(900px 600px at 15% 5%, rgba(111,227,164,.25), transparent 55%),
+      radial-gradient(700px 500px at 85% 20%, rgba(242,214,155,.12), transparent 58%),
+      linear-gradient(160deg,#06100b, #0c2418 55%, #050d09);
+    color:var(--mist);
+    font-family:var(--font-body);
+    overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; opacity:.18; z-index:0;
+    background-image:radial-gradient(rgba(255,255,255,.35) 1px, transparent 1.5px);
+    background-size:22px 22px; mix-blend-mode:overlay;
+  }
+  canvas#grain{position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.55}
+  .wrap{position:relative; z-index:1; width:min(var(--max), calc(100% - 2rem)); margin-inline:auto}
+  header{
+    position:sticky; top:0; z-index:20; backdrop-filter:blur(14px);
+    background:linear-gradient(#07120ddd, #07120d88);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 0}
+  .brand{display:flex; gap:.7rem; align-items:center; text-decoration:none; color:var(--mist); font-weight:700}
+  .mark{width:42px; height:42px; border-radius:14px; display:grid; place-items:center;
+    background:linear-gradient(135deg, var(--leaf-2), #0e2a1a); box-shadow:0 0 30px rgba(111,227,164,.35)}
+  nav{display:flex; flex-wrap:wrap; gap:.8rem; justify-content:flex-end}
+  nav a{color:rgba(216,239,224,.82); text-decoration:none; font-size:.92rem}
+  nav a:hover{color:#fff}
+  .hero{min-height:92vh; display:grid; align-items:center; padding:5rem 0 3rem; position:relative}
+  .hero-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:2rem; align-items:center}
+  .eyebrow{display:inline-flex; align-items:center; gap:.55rem; padding:.5rem .85rem; border:1px solid var(--line);
+    border-radius:999px; background:rgba(111,227,164,.08); color:var(--glow); text-transform:uppercase; letter-spacing:.14em; font-size:.72rem}
+  h1{font-family:var(--font-display); font-weight:500; font-size:clamp(3rem,7vw,6.2rem); line-height:.93; margin:1.2rem 0}
+  h1 em{font-style:italic; color:var(--sand); font-weight:500}
+  .lead{max-width:58ch; color:rgba(232,246,238,.78); font-size:1.12rem; line-height:1.75}
+  .cta{display:flex; flex-wrap:wrap; gap:.9rem; margin-top:1.6rem}
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:.6rem; padding:.95rem 1.25rem; border-radius:16px;
+    text-decoration:none; border:1px solid transparent; cursor:pointer; transition:.25s ease; font-weight:700}
+  .btn.primary{background:linear-gradient(135deg,#d7ffdd,#6fe3a4); color:#06150d; box-shadow:0 18px 50px rgba(111,227,164,.25)}
+  .btn.ghost{border-color:var(--line); color:var(--mist); background:rgba(255,255,255,.03)}
+  .btn:hover{transform:translateY(-2px)}
+  .hero-card{padding:1.25rem; border:1px solid var(--line); border-radius:28px; background:linear-gradient(155deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    backdrop-filter:blur(18px); box-shadow:0 30px 80px rgba(0,0,0,.35); position:relative; overflow:hidden}
+  .hero-card::after{content:""; position:absolute; inset:auto -40% -45% auto; width:210px; height:210px; border-radius:50%;
+    background:radial-gradient(circle, var(--sand), transparent 72%); opacity:.28; filter:blur(10px)}
+  .screen{border-radius:20px; padding:1.2rem; background:linear-gradient(135deg,rgba(8,22,15,.98),rgba(15,38,24,.92)); border:1px solid var(--line)}
+  .pill{display:inline-block; border:1px solid rgba(111,227,164,.28); color:var(--glow); padding:.32rem .65rem; border-radius:999px; font-size:.72rem; letter-spacing:.08em}
+  .big{font-family:var(--font-display); font-size:2.3rem; line-height:1.05; margin-top:.9rem; color:#fff}
+  .muted{color:rgba(216,239,224,.65); line-height:1.6; margin-top:.9rem}
+  .stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:.7rem; margin-top:1rem}
+  .stat{padding:.9rem; border:1px solid var(--line); border-radius:16px; background:rgba(0,0,0,.18); text-align:center}
+  .stat b{display:block; font-size:1.35rem; color:var(--sand); line-height:1}
+  .section{padding:5rem 0; border-top:1px solid var(--line)}
+  .section-head{max-width:760px; margin-bottom:2rem}
+  .kicker{color:var(--glow); letter-spacing:.18em; text-transform:uppercase; font-size:.75rem}
+  h2{font-family:var(--font-display); font-weight:500; font-size:clamp(2rem,4vw,3.7rem); line-height:1.02; margin:.5rem 0 1rem}
+  p.lead.small{font-size:1rem}
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:1rem}
+  .card{padding:1.15rem; border-radius:22px; border:1px solid var(--line); background:rgba(255,255,255,.035); transition:.25s ease; position:relative; overflow:hidden}
+  .card:hover{transform:translateY(-5px); border-color:rgba(242,214,155,.35); background:rgba(255,255,255,.06)}
+  .card.low{background:linear-gradient(160deg, rgba(111,227,164,.13), rgba(255,255,255,.03))}
+  .card .num{color:var(--sand); font-size:.85rem; letter-spacing:.12em}
+  .card h3{font-size:1.35rem; margin:.6rem 0 .45rem}
+  .card p{color:rgba(216,239,224,.74); line-height:1.65}
+  .wide{background:linear-gradient(135deg, rgba(242,214,155,.13), rgba(111,227,164,.06)); border:1px solid rgba(242,214,155,.22); border-radius:26px; padding:2rem; margin:2.2rem 0}
+  .wide-grid{display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:center}
+  .chart{display:flex; align-items:end; gap:.55rem; height:260px; padding:1rem; border:1px solid var(--line); border-radius:22px; background:rgba(0,0,0,.2)}
+  .bar{flex:1; border-radius:16px 16px 6px 6px; height:var(--h); background:linear-gradient(180deg,var(--leaf),#123d23); box-shadow:0 10px 25px rgba(111,227,164,.18)}
+  .foot{padding:3rem 0 4rem; border-top:1px solid var(--line); color:rgba(216,239,224,.66)}
+  .foot p{line-height:1.6}
+  @media (max-width:900px){ .hero-grid,.wide-grid{grid-template-columns:1fr} .cards{grid-template-columns:1fr} nav{display:none} .chart{height:180px} }
+  @media (max-width:520px){ .stat-grid{grid-template-columns:1fr} .hero{min-height:auto} h1{font-size:3rem} }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important; animation:none!important; scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<canvas id="grain" aria-hidden="true"></canvas>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#">
+      <span class="mark">🌿</span>
+      <span>Terra<span style="color:var(--sand)">IA</span></span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <a href="#conceito">Conceito</a>
+      <a href="#ia">IA Sustentável</a>
+      <a href="#impact">Impacto</a>
+      <a href="#cta">Contato</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Natureza + Inteligência Artificial + Futuro</div>
+        <h1>O futuro pode<br><em>regenerado</em> ser<br>pelo que construimos.</h1>
+        <p class="lead">Um site conceitual para uma narrativa poderosa: como a IA, quando aplicada com propósito, ajuda a proteger florestas, água, energia e biodiversidade — sem trocar tecnologia por destruição.</p>
+        <div class="cta">
+          <a class="btn primary" href="#ia">Explorar a visão ↗</a>
+          <a class="btn ghost" href="#impact">Ver o impacto</a>
+        </div>
+      </div>
+      <aside class="hero-card">
+        <div class="screen">
+          <span class="pill">Conceitual • 2026</span>
+          <div class="big">Inteligência com luz de floresta.</div>
+          <p class="muted">Uma interface que transforma dados ambientais em decisões claras, bonita, humana e auditável.</p>
+          <div class="stat-grid">
+            <div class="stat"><b id="n1">0</b><span>tec. demo</span></div>
+            <div class="stat"><b id="n2">0</b><span>ideias</span></div>
+            <div class="stat"><b id="n3">0</b><span>cores</span></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="conceito">
+    <div class="section-head">
+      <div class="kicker">01 — Conceito</div>
+      <h2>Não mais uma máquina isolada; uma paisagem inteligente.</h2>
+      <p class="lead small">O site transmite um único slogan forte: tecnologia que observa o planeta para produzir menos impacto, mais sabedoria e decisões mais justas.</p>
+    </div>
+    <div class="cards">
+      <article class="card low">
+        <div class="num">VISÃO</div>
+        <h3>Floresta + código</h3>
+        <p>A interface inspira-se em organismos vivos, padrões naturais e ritmo orgânico de crescimento.</p>
+      </article>
+      <article class="card">
+        <div class="num">PROPÓSITO</div>
+        <h3>Clareza antes de potência</h3>
+        <p>Dados complexos transformados em narrativas compreensíveis para pessoas e políticas públicas.</p>
+      </article>
+      <article class="card">
+        <div class="num">ESTÉTICA</div>
+        <h3>Tech com alma</h3>
+        <p>Gradientes de folhagem, textura de luz, glassmorphism e tipografia editorial.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="ia">
+    <div class="section-head">
+      <div class="kicker">02 — IA Sustentável</div>
+      <h2>A pergunta certa não é “quanto pode fazer”, mas “para quem serve”.</h2>
+    </div>
+    <div class="wide">
+      <div class="wide-grid">
+        <div>
+          <p class="lead small">Este conceito funde áreas como clima, energia, agricultura, cidades e água. O objetivo é mostrar uma IA que apoie a sustentabilidade — com transparência, responsabilidade e propósito ambiental.</p>
+          <p class="muted" style="margin-top:1rem">Modelo visual: floresta como sistema, IA como sensor, humano como decisão final.</p>
+        </div>
+        <div class="chart" aria-label="Gráfico conceitual de impacto">
+          <div class="bar" style="--h:42%"></div>
+          <div class="bar" style="--h:65%"></div>
+          <div class="bar" style="--h:78%"></div>
+          <div class="bar" style="--h:54%"></div>
+          <div class="bar" style="--h:88%"></div>
+          <div class="bar" style="--h:72%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="impact">
+    <div class="section-head">
+      <div class="kicker">03 — Impacto</div>
+      <h2>Energia, água e escolhas que deixam rastros.</h2>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="num">CLIMA</div>
+        <h3>Monitoramento</h3>
+        <p>Modelos para prever risco, mapear risco e reduzir impactos antes que escalem.</p>
+      </article>
+      <article class="card">
+        <div class="num">CIDADES</div>
+        <h3>Resíduos e logística</h3>
+        <p>Otimização de transporte, coleta e distribuição, reduzindo emissão e desperdício.</p>
+      </article>
+      <article class="card">
+        <div class="num">RECURSOS</div>
+        <h3>Água e terra</h3>
+        <p>Ferramentas para uso mais responsável de terras férteis, sonos? sem — correto: uso mais consciente de água e solo.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="cta" style="text-align:center">
+    <div class="eyebrow">Próximo passo</div>
+    <h2 style="max-width:820px;margin-inline:auto">Transforme visão em produto.</h2>
+    <p class="lead" style="margin-inline:auto">Se quiser, eu posso transformar isso em um site final limpo, com conteúdo real, imagens, formulário, animações e deploy.</p>
+    <div class="cta" style="justify-content:center">
+      <a class="btn primary" href="#">Começar Agora</a>
+      <a class="btn ghost" href="#conceito">Rever conceitos</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><strong>Nature na Modernidade IA Sustentável</strong> — protótipo conceitual em HTML 5. Conteúdo ilustrativo, não acadêmico; não representa dados oficiais de impacto.</p>
+  </div>
+</footer>
+
+<script>
+  // Canvas: poeira/luz flutuante
+  const c = document.getElementById('grain');
+  const ctx = c.getContext('2d');
+  let particles = [];
+  function resize(){ c.width = innerWidth; c.height = innerHeight; }
+  addEventListener('resize', resize); resize();
+  for(let i=0;i<70;i++){ particles.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.6+.4,a:Math.random()*Math.PI*2,s:.001+Math.random()*.002,d:.15+Math.random()*.3}); }
+  function frame(t){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(const p of particles){
+      const y = (p.y + Math.sin(t*p.s + p.a)*24) % c.height;
+      const x = (p.x + Math.cos(t*p.s + p.a)*12) % c.width;
+      ctx.beginPath(); ctx.arc(x,y,p.r,0,Math.PI*2); ctx.fillStyle = 'rgba(242,214,155,'+p.d+')'; ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // Contadores
+  function count(el, to, dur=1400){
+    const start = performance.now();
+    const from = 0;
+    function tick(now){
+      const p = Math.min((now-start)/dur, 1);
+      const eased = 1 - Math.pow(1-p, 3);
+      el.textContent = Math.round(from + (to-from)*eased);
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  addEventListener('DOMContentLoaded', () => {
+    count(document.getElementById('n1'), 42);
+    count(document.getElementById('n2'), 18);
+    count(document.getElementById('n3'), 6);
+  });
+</script>
+</body>
+</html>
